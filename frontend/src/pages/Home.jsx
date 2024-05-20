@@ -268,15 +268,25 @@ const Home = () => {
 
       <section>
         <div className="container">
-          <div className=" xl:w-[470px] mx-auto">
-            <h2 className="heading text-center"> Our Great Doctors </h2>
-            <p className=" text_para text-center">
-              World-class care for everyone. Our health System offers unmatched,
-              expert health care
-            </p>
+          <div className="flex items-center justify-between flex-col lg:flex-row">
+            <div className="mb-5 lg:mb-0">
+              <h2 className="heading">Our Great Doctors</h2>
+              <p className=" text_para">
+                World-class care for everyone. Our health system offers
+                unmatched, expert health care. From the lab to the clinic.
+              </p>
+            </div>
+
+            <div>
+              <Link to="/doctors" className="btn">
+                View All
+              </Link>
+            </div>
           </div>
 
-          <DoctorsList />
+          <div className="doctor__list">
+            <DoctorsList limit={3} />
+          </div>
         </div>
       </section>
 
@@ -326,3 +336,4 @@ const Home = () => {
 };
 
 export default Home;
+
