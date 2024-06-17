@@ -39,7 +39,9 @@ const Home = () => {
                   magni voluptas tenetur laboriosam vero! Corrupti?
                 </p>
 
-                <button className="btn">Request an Appointment</button>
+                <Link to="/doctors">
+                  <button className="btn">Request an Appointment</button>
+                </Link>
               </div>
 
               {/* ------------ Hero Content ------------ */}
@@ -336,4 +338,3 @@ const Home = () => {
 };
 
 export default Home;
-

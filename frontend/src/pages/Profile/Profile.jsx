@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { app } from "../../firebase";
+import loadingGif from "../../assets/images/Loading.gif";
 
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -17,11 +18,13 @@ const ProfilePage = () => {
         // Fetch user data from Firestore
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnap = await getDoc(userDocRef);
-        
+
         if (userDocSnap.exists()) {
           const doctorProfileId = userDocSnap.data().doctorProfileId;
-          const doctorProfileDoc = await getDoc(doc(db, "doctors_profile", doctorProfileId));
-          
+          const doctorProfileDoc = await getDoc(
+            doc(db, "doctors_profile", doctorProfileId)
+          );
+
           if (doctorProfileDoc.exists()) {
             setProfileData(doctorProfileDoc.data());
           } else {
@@ -50,7 +53,12 @@ const ProfilePage = () => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center">
+        <img src={loadingGif} alt="Loading..." />
+      </div>
+    );
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
@@ -98,4 +106,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-

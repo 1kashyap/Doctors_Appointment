@@ -10,6 +10,7 @@ import { Routes, Route } from "react-router-dom";
 import Profile from "../pages/Profile/Profile";
 import Just from "../Med";
 import DoctorData from "../pages/Doctors/CreateDoctorProfile";
+import AddClinic from "../pages/Doctors/AddClinic";
 
 const Routers = () => {
   return (
@@ -25,6 +26,7 @@ const Routers = () => {
       <Route path="/profile" element={<Profile />} />
       <Route path="/doctordata" element={<DoctorData />} />
       <Route path="/just" element={<Just />} />
+      <Route path="/addclinic" element={<AddClinic />} />
     </Routes>
   );
 };
