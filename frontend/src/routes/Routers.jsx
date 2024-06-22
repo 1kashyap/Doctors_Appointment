@@ -11,6 +11,8 @@ import Profile from "../pages/Profile/Profile";
 import Just from "../Med";
 import DoctorData from "../pages/Doctors/CreateDoctorProfile";
 import AddClinic from "../pages/Doctors/AddClinic";
+import AdminLogin from "../components/Admin/AdminLogin";
+import AdminPage from "../components/Admin/AdminPage";
 
 const Routers = () => {
   return (
@@ -27,6 +29,8 @@ const Routers = () => {
       <Route path="/doctordata" element={<DoctorData />} />
       <Route path="/just" element={<Just />} />
       <Route path="/addclinic" element={<AddClinic />} />
+      <Route path="/adminlogin" element={<AdminLogin />} />
+      <Route path="/adminpage" element={<AdminPage />} />
     </Routes>
   );
 };
