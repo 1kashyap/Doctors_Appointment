@@ -4,10 +4,14 @@ import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { app } from "../../firebase";
 import PhotoUpload from "../../components/PhotoUpload/PhotoUpload";
+import Select from 'react-select';
+import { countries } from "../../utils/countries";
 
 const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
+
+
 
 function generateRandomId(length) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -62,35 +66,26 @@ const specialties = [
   "Audiologist",
   "Speech Therapist",
   "Dietitian/Nutritionist",
-  // Add other specialties as needed
 ];
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const morningSlots = Array.from({ length: 12 }, (_, i) => {
-  const hour = (i + 1) < 10 ? `0${i + 1}` : `${i + 1}`;
-  return `${hour}:00 AM`;
-});
-
-
-const eveningSlots = Array.from({ length: 12 }, (_, i) => {
-  const hour = (i + 1) < 10 ? `0${i + 1}` : `${i + 1}`;
-  return `${hour}:00 PM`;
-});
-
-const timeSlotsPerDay = [
-  ...morningSlots,
-  ...eveningSlots,
- 
-];
-
+const morningSlots = Array.from({ length: 12 }, (_, i) => `${(i + 1).toString().padStart(2, '0')}:00 AM`);
+const eveningSlots = Array.from({ length: 12 }, (_, i) => `${(i + 1).toString().padStart(2, '0')}:00 PM`);
+const timeSlotsPerDay = [...morningSlots, ...eveningSlots];
 
 const AddClinicForm = () => {
   const [clinicName, setClinicName] = useState("");
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState({
+    line1: "",
+    line2: "",
+    city: "",
+    state: "",
+    country: "",
+    pincode: "",
+  });
   const [contactNumbers, setContactNumbers] = useState([""]);
-  const [type, setType] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [selectedSpecialty, setSelectedSpecialty] = useState("");
   const [clinicPhotos, setClinicPhotos] = useState([]);
   const [timeSlots, setTimeSlots] = useState(
     daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [] }), {})
@@ -108,28 +103,16 @@ const AddClinicForm = () => {
   };
 
   const handleRemoveContactField = (index) => {
-    setContactNumbers((prevContacts) => {
-      const updatedContacts = [...prevContacts];
-      updatedContacts.splice(index, 1);
-      return updatedContacts;
-    });
-  };
-
-  const handleToggleSpecialty = (specialty) => {
-    setSelectedSpecialties((prevSelected) =>
-      prevSelected.includes(specialty)
-        ? prevSelected.filter((s) => s !== specialty)
-        : [...prevSelected, specialty]
-    );
+    setContactNumbers((prevContacts) => prevContacts.filter((_, i) => i !== index));
   };
 
   const handleToggleTimeSlot = (day, slot) => {
-    setTimeSlots((prevTimeSlots) => {
-      const updatedDaySlots = prevTimeSlots[day].includes(slot)
+    setTimeSlots((prevTimeSlots) => ({
+      ...prevTimeSlots,
+      [day]: prevTimeSlots[day].includes(slot)
         ? prevTimeSlots[day].filter((s) => s !== slot)
-        : [...prevTimeSlots[day], slot];
-      return { ...prevTimeSlots, [day]: updatedDaySlots };
-    });
+        : [...prevTimeSlots[day], slot],
+    }));
   };
 
   const handlePost = async (e) => {
@@ -146,41 +129,38 @@ const AddClinicForm = () => {
 
     try {
       const clinicPhotoURLs = await uploadPhotos(clinicPhotos, "clinic/photos");
-
       const docId = generateRandomId(28);
 
       const clinicData = {
         name: clinicName,
         address: address,
         contactNumbers: contactNumbers,
-        type: type,
         description: description,
-        specialties: selectedSpecialties,
+        specialty: selectedSpecialty,
         photos: clinicPhotoURLs,
-        timeSlots: Object.entries(timeSlots).reduce((acc, [day, slots]) => {
-          acc[day] = slots.filter(slot => slot);
-          return acc;
-        }, {})
+        timeSlots: Object.fromEntries(
+          Object.entries(timeSlots).map(([day, slots]) => [day, slots.filter(slot => slot)])
+        )
       };
 
-      // Save clinic data in the "clinic" collection with a random ID
       await setDoc(doc(db, "clinic", docId), clinicData);
-
-      // Save the reference to the clinic data in the "users" collection under the authenticated user's document
-      await setDoc(doc(db, "users", user.uid), {
-        clinicId: docId,
-      }, { merge: true });
+      await setDoc(doc(db, "users", user.uid), { clinicId: docId }, { merge: true });
 
       setLoading(false);
       alert("Clinic details added successfully!");
 
-      // Clear form fields
       setClinicName("");
-      setAddress("");
+      setAddress({
+        line1: "",
+        line2: "",
+        city: "",
+        state: "",
+        country: "",
+        pincode: "",
+      });
       setContactNumbers([""]);
-      setType("");
       setDescription("");
-      setSelectedSpecialties([]);
+      setSelectedSpecialty("");
       setClinicPhotos([]);
       setTimeSlots(daysOfWeek.reduce((acc, day) => ({ ...acc, [day]: [] }), {}));
       setSelectedDay(daysOfWeek[0]);
@@ -189,6 +169,12 @@ const AddClinicForm = () => {
       setLoading(false);
     }
   };
+
+  const countryOptions = Object.keys(countries).map(country => ({ value: country, label: country }));
+  const stateOptions = address.country ? Object.keys(countries[address.country]).map(state => ({ value: state, label: state })) : [];
+  const cityOptions = address.state ? countries[address.country][address.state].map(city => ({ value: city, label: city })) : [];
+
+  const specialtyOptions = specialties.map(specialty => ({ value: specialty, label: specialty }));
 
   return (
     <div className="container mx-auto p-6">
@@ -207,29 +193,78 @@ const AddClinicForm = () => {
         </div>
 
         <div>
-          <label className="form_label">Address</label>
+          <label className="form_label text-red-500">Address Line 1 *</label>
           <input
             type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            value={address.line1}
+            onChange={(e) => setAddress({ ...address, line1: e.target.value })}
             className="form_input"
             required
           />
         </div>
 
         <div>
-          <label className="form_label">Type</label>
+          <label className="form_label">Address Line 2</label>
           <input
             type="text"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+            value={address.line2}
+            onChange={(e) => setAddress({ ...address, line2: e.target.value })}
             className="form_input"
-            required
+          />
+        </div>
+
+        <div className="grid grid-cols-4 gap-4">
+          <div>
+            <label className="form_label">Country</label>
+            <Select
+              options={countryOptions}
+              value={countryOptions.find(option => option.value === address.country)}
+              onChange={(option) => setAddress({ ...address, country: option.value, state: "", city: "" })}
+              isSearchable
+            />
+          </div>
+          <div>
+            <label className="form_label">State</label>
+            <Select
+              options={stateOptions}
+              value={stateOptions.find(option => option.value === address.state)}
+              onChange={(option) => setAddress({ ...address, state: option.value, city: "" })}
+              isSearchable
+            />
+          </div>
+          <div>
+            <label className="form_label">City</label>
+            <Select
+              options={cityOptions}
+              value={cityOptions.find(option => option.value === address.city)}
+              onChange={(option) => setAddress({ ...address, city: option.value })}
+              isSearchable
+            />
+          </div>
+          <div>
+            <label className="form_label">Pincode</label>
+            <input
+              type="text"
+              value={address.pincode}
+              onChange={(e) => setAddress({ ...address, pincode: e.target.value })}
+              className="form_input"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="form_label">Specialty</label>
+          <Select
+            options={specialtyOptions}
+            value={specialtyOptions.find(option => option.value === selectedSpecialty)}
+            onChange={(option) => setSelectedSpecialty(option.value)}
+            isSearchable
           />
         </div>
 
         <div>
-          <label className="form_label">Clinic/Hospital Description</label>
+          <label className="form_label">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -270,23 +305,6 @@ const AddClinicForm = () => {
           >
             Add Contact Number
           </button>
-        </div>
-
-        <div>
-          <label className="form_label">Specialties</label>
-          <div className="flex flex-wrap gap-2">
-            {specialties.map((specialty, index) => (
-              <button
-                type="button"
-                key={index}
-                onClick={() => handleToggleSpecialty(specialty)}
-                className={`btn ${selectedSpecialties.includes(specialty) ? 'bg-primaryColor' : 'bg-gray-300'} text-white px-3 py-1 rounded`}
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                {specialty}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div>
@@ -336,3 +354,4 @@ const AddClinicForm = () => {
 };
 
 export default AddClinicForm;
+
