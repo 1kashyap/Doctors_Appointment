@@ -14,7 +14,8 @@ const Modal = ({ show, onClose, onConfirm, actionType }) => {
       : "Are you sure you want to disable/enable this user?";
 
   const confirmText = actionType === "delete" ? "Delete" : "Confirm";
-  const confirmButtonClass = actionType === "delete" ? "bg-red-500" : "bg-teal-500";
+  const confirmButtonClass =
+    actionType === "delete" ? "bg-red-500" : "bg-teal-500";
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -127,6 +128,7 @@ const DoctorAdmin = () => {
                 />
               </div>
               <div className="p-4 text-xl">
+                <p className="text-gray-500 font-medium mb-2">ID: {item.id}</p>
                 <p className="text-2xl font-semibold my-2">{item.name}</p>
                 <ul>
                   {Object.entries(item).map(
@@ -195,4 +197,3 @@ const DoctorAdmin = () => {
 };
 
 export default DoctorAdmin;
-
