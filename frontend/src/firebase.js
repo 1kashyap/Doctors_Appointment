@@ -5,14 +5,13 @@ import { getStorage } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCIIpSmfwinHzn8col2KZJYDqJPZUBQXxk",
-  authDomain: "doc-test-1-c8dab.firebaseapp.com",
-  databaseURL: "https://doc-test-1-c8dab-default-rtdb.firebaseio.com",
-  projectId: "doc-test-1-c8dab",
-  storageBucket: "doc-test-1-c8dab.appspot.com",
-  messagingSenderId: "538079324773",
-  appId: "1:538079324773:web:c0f8b4ffc5ccf67b91f48c",
-  measurementId: "G-Y0B74ZXBMT",
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID" // Optional
 };
 
 export const app = initializeApp(firebaseConfig);
