@@ -85,15 +85,23 @@ const SidePanel = () => {
         <ul className="mt-3">
           <li className="flex items-center justify-between mb-1">
             <p className="text-[15px] leading-6 text-textColor font-semibold">Monday</p>
-            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:30 PM</p>
+            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:00 PM</p>
           </li>
           <li className="flex items-center justify-between mb-1">
             <p className="text-[15px] leading-6 text-textColor font-semibold">Tuesday</p>
-            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:30 PM</p>
+            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:00 PM</p>
+          </li>
+          <li className="flex items-center justify-between mb-1">
+            <p className="text-[15px] leading-6 text-textColor font-semibold">Wednesday</p>
+            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:00 PM</p>
+          </li>
+          <li className="flex items-center justify-between mb-1">
+            <p className="text-[15px] leading-6 text-textColor font-semibold">Thrusday</p>
+            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:00 PM</p>
           </li>
           <li className="flex items-center justify-between mb-1">
             <p className="text-[15px] leading-6 text-textColor font-semibold">Friday</p>
-            <p className="text-[15px] leading-6 text-textColor font-semibold">5:00 PM - 9:30 PM</p>
+            <p className="text-[15px] leading-6 text-textColor font-semibold">4:00 PM - 7:00 PM</p>
           </li>
         </ul>
       </div>

@@ -102,8 +102,8 @@ const ProfilePage = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="profile-header hero_section py-6 px-5 rounded-sm flex items-center mb-8">
+    <div className="container w-full mx-auto p-6">
+      <div className="profile-header hero_section py-6 px-16 rounded-sm flex items-center mb-8">
         {profileData?.profilePhoto && (
           <img
             src={profileData.profilePhoto}
@@ -119,7 +119,7 @@ const ProfilePage = () => {
           </p>
         </div>
       </div>
-      <div className="tabs mt-[50px] border-b text-xl border-solid border-[#0066FF34]">
+      <div className="tabs mt-[50px] border-b px-16 text-xl border-solid border-[#0066FF34]">
         <button
           className={`${
             activeTab === "profile" &&

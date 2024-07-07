@@ -137,11 +137,11 @@ const BookingPopup = ({ onClose }) => {
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Select Time Slot:</label>
               <div className="flex space-x-3">
-                {["9:00 AM", "11:00 AM", "1:00 PM", "3:00 PM"].map(slot => (
+                {["04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM", "06:00 PM","06:30 PM","07:00 PM" ].map(slot => (
                   <button
                     key={slot}
                     onClick={() => setTimeSlot(slot)}
-                    className={`px-4 py-2 rounded-md ${timeSlot === slot ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+                    className={`px-4 py-2 rounded-md ${timeSlot === slot ? 'bg-primaryColor text-white' : 'bg-gray-200 text-black'}`}
                   >
                     {slot}
                   </button>

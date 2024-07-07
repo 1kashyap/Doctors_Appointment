@@ -6,8 +6,8 @@ import React, { useState } from "react";
 import Users from "./UserAdmin";
 import Doctors from "./DoctorAdmin";
 import Clinics from "./ClinicAdmin";
-// import Booking from "./BookingAdmin";
-// import Payment from "./PaymentAdmin";
+import Booking from "./BookingAdmin";
+
 
 const AdminPage = () => {
   // State to track the selected tab
@@ -22,10 +22,9 @@ const AdminPage = () => {
         return <Doctors />;
       case "Clinics":
         return <Clinics />;
-      // case "Booking":
-      //   return <Booking />;
-      // case "Payment":
-      //   return <Payment />;
+      case "Booking":
+        return <Booking />;
+      
       default:
         return <Users />;
     }
@@ -70,7 +69,7 @@ const AdminPage = () => {
         >
           Clinics
         </button>
-        {/* <button
+         <button
           className={`flex-1 text-headingColor cursor-pointer text-xl p-2 rounded-lg ${
             selectedTab === "Booking"
               ? "text-primaryColor rounded-xl font-bold border-b-4 border-primaryColor bg-gradient-to-b from-slate-50 via-slate-50 to-teal-100"
@@ -80,16 +79,7 @@ const AdminPage = () => {
         >
           Booking
         </button>
-        <button
-          className={`flex-1 text-headingColor cursor-pointer text-xl p-2 rounded-lg ${
-            selectedTab === "Payment"
-              ? "text-primaryColor rounded-xl font-bold border-b-4 border-primaryColor bg-gradient-to-b from-slate-50 via-slate-50 to-teal-100"
-              : "hover:bg-teal-100"
-          }`}
-          onClick={() => setSelectedTab("Payment")}
-        >
-          Payment
-        </button> */}
+        
       </div>
 
       {/* Main Part */}
